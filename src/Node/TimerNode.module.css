@@ -1,0 +1,23 @@
+.timerNodeContainer {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 2rem;
+    text-align: center;
+  }
+
+  .countdownContainer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    /* margin-bottom: 1rem;  */
+  }
+
+  .timePickButtons {
+    padding-top: 1em;
+    justify-content: center;
+  }
+  
+  .darkModeToggle {
+    justify-content: left;
+    padding-bottom: 1em;
+  }
