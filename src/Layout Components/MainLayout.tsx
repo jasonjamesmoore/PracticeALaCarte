@@ -18,17 +18,17 @@ import {
 } from "@mantine/core";
 // import { FaSun, FaMoon } from 'react-icons/fa';
 // import ButtonComponent from '../components/Buttons';
-import { NavLink } from "@mantine/core";
-import { Page } from "../Page/Page";
+// import { NavLink } from "@mantine/core";
 import PageNav from "./PageNav";
-import { CollectionNavbar } from "./CollectionNavbar";
+// import { CollectionNavbar } from "./CollectionNavbar";
 import { IconPlus } from "@tabler/icons-react";
-import { PracticeSessionCard } from "./PracticeSessionCard";
+import { NavbarLinksGroup } from "./Navigation/NavbarLinksGroup";
+// import { PracticeSessionCard } from "./PracticeSessionCard";
 
 export function MainLayout() {
   const [opened, { toggle }] = useDisclosure();
-  const [currentComponent, setCurrentComponent] =
-    React.useState<string>("component1");
+  // const [currentComponent, setCurrentComponent] =
+  //   React.useState<string>("component1");
 
   return (
     <AppShell
@@ -65,15 +65,13 @@ export function MainLayout() {
           </Tooltip>
         </Group>
           <PageNav />
+          {/* <NavbarLinksGroup /> */}
         </AppShell.Section>
         <AppShell.Section>🎷🍖HamHorn Productions🍖🎷</AppShell.Section>
       </AppShell.Navbar>
       <AppShell.Main>
         <Outlet />
       </AppShell.Main>
-      {/* <AppShell.Footer p='md'>
-        🎷🍖HamHorn Productions🍖🎷
-        </AppShell.Footer>     */}
     </AppShell>
   );
 }

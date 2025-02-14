@@ -1,67 +1,136 @@
+// here is some ai help
+
+// import { NavLink } from "@mantine/core";
+// import { Link } from "react-router-dom";
+// import { useState } from "react";
+// import { IconChevronDown, IconChevronRight } from "@tabler/icons-react";
+// import { Page, ParentChildRelation } from "../utils/types";
+
+// type PracticeSessionCardProps = {
+//   parentPage: Page;
+//   childrenPages: ParentChildRelation[];
+// };
+
+// export function PracticeSessionCard({
+//   parentPage,
+//   childrenPages,
+// }: PracticeSessionCardProps) {
+//   const [opened, setOpened] = useState(false);
+
+//   const uniqueChildren = [
+//     ...new Map(childrenPages.map((p) => [p.childPageId, p])).values(),
+//   ];
+
+//   return (
+//     <div>
+//       {/* Parent Link (Navigates only) */}
+//       <NavLink
+//         label={
+//           <Link to={`/${parentPage.slug}`} style={{ textDecoration: "none", color: "inherit" }}>
+//             {parentPage.title}
+//           </Link>
+//         }
+//         childrenOffset={28}
+//         opened={opened}
+//         rightSection={
+//           uniqueChildren.length > 0 ? (
+//             <div
+//               onClick={(event) => {
+//                 event.stopPropagation(); // Prevents navigation when clicking the chevron
+//                 setOpened((prev) => !prev);
+//               }}
+//               style={{ cursor: "pointer", padding: "4px" }}
+//             >
+//               {opened ? <IconChevronDown size={16} /> : <IconChevronRight size={16} />}
+//             </div>
+//           ) : null
+//         }
+//       >
+//         {uniqueChildren.map((childRelation) => {
+//           const childPage = childRelation.childPage;
+//           if (!childPage.id) return null;
+
+//           return (
+//             <NavLink
+//               component={Link}
+//               key={`child-${childPage.id}`}
+//               to={`/${childPage.slug}`}
+//               label={childPage.title}
+//             />
+//           );
+//         })}
+//       </NavLink>
+//     </div>
+//   );
+// }
+
+// below is my code
+
 import { NavLink } from "@mantine/core";
+import { Link, useNavigate } from "react-router-dom";
+import { useState } from "react";
 // import classes from "./PracticeSessionCard.module.css";
-import { Page, ChildPage, ParentPage } from "../utils/types";
+import { Page, ParentChildRelation } from "../utils/types";
 
 type PracticeSessionCardProps = {
-  page: Page;
-  parentPages: ParentPage[];
-  childPages: ChildPage[];
-  pages: Page[];
+  parentPage: Page;
+  childrenPages: ParentChildRelation[];
 };
 
 export function PracticeSessionCard({
-  page,
-  childPages,
-  parentPages,
-  pages,
+  parentPage,
+  childrenPages,
 }: PracticeSessionCardProps) {
-  console.log("All Parent Pages in Card:", parentPages);
-  console.log("Child Pages in card:", childPages);
-  const uniqueParentPages = [
-    ...new Map(parentPages.map((p) => [p.parent_page_id, p])).values(),
-  ];
-  console.log("Unique Parent Pages in Card:", uniqueParentPages);
+  console.log("childrenPages Prop in PracticeSessionCard:", childrenPages);
+  const [opened, setOpened] = useState(false);
+  const navigate = useNavigate();
 
+  const uniqueChildren = [
+    ...new Map(childrenPages.map((p) => [p.childPageId, p])).values(),
+  ];
+
+  const handleClick = () => {
+    setOpened((prev) => !prev); // Toggle children visibility
+    // navigate(`/${parentPage.slug}`); // Navigate to parent page
+  };
+
+  console.log("Unique Child Pages in Card:", uniqueChildren);
+  console.log(
+    "Unique Child Pages in Card:",
+    JSON.stringify(uniqueChildren, null, 2)
+  );
 
   const renderPageLinks =
-    uniqueParentPages.length > 0 ? (
-      <div>
-        {uniqueParentPages.map((parentRelation) => {
-          const parentPage = pages.find(
-            (p) => p.id === parentRelation.parent_page_id
-          );
-          if (!parentPage) return null;
+    uniqueChildren.length > 0 ? (
+      <>
+        {uniqueChildren.map((childRelation) => {
+          const childPage = childRelation.childPage;
+          if (!childPage.id) return null;
 
-          const relatedChildPages = childPages.filter(
-            (childPage) => childPage.parent_page_id === parentPage.id
-          );
           return (
             <NavLink
-              key={`parent-${parentPage.id}`}
-              href={`/${parentPage.slug}`}
-              label={parentPage.title}
-              childrenOffset={28}
-            >
-              {relatedChildPages.length > 0 ? (
-                relatedChildPages.map((childPage) => {
-                  if (!childPage.id) return null;
-                  return (
-                    <NavLink
-                      key={`parent-${parentPage.id}-child-${childPage.child_page_id}`}
-                      href={`/${childPage.slug}`}
-                      label={childPage.title}
-                    />
-                  );
-                })
-              ) : (
-                <p>No child pages available.</p>
-              )}
-            </NavLink>
+              component={Link}
+              key={`child-${childPage.id}`}
+              to={`/${childPage.slug}`}
+              label={childPage.title}
+            />
           );
         })}
-      </div>
+      </>
     ) : (
-      <p>No parent pages available.</p>
+      <p>No child pages available.</p>
     );
-  return <>{renderPageLinks}</>;
+
+  return (
+    <NavLink
+      component={Link}
+      to={`/${parentPage.slug}`}
+      label={parentPage.title}
+      childrenOffset={28}
+      onClick={handleClick} // Handles both toggle & navigation
+      opened={opened}
+    >
+      {renderPageLinks}
+    </NavLink>
+  );
 }

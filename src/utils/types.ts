@@ -18,8 +18,8 @@ export type Page = {
   id: string;
   slug: string;
   title: string;
-  nodes: NodeData[];
-  cover: string;
+  nodes?: NodeData[];
+  cover?: string;
   parentId?: string | null;
   children?: Page[];
 };
@@ -43,9 +43,12 @@ export type ParentPage = {
   };
 };
 
-export type PageRelation = {
-  id: string;
+export type ParentChildRelation = {
   parentPageId: string;
   childPageId: string;
-  position: number;
+  childPage: {
+    id: string;
+    title: string;
+    slug: string;
+  };
 };
