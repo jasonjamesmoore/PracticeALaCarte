@@ -14,17 +14,16 @@ type AppStateProviderProps = {
   initialState: Page;
 };
 
-export const AppStateProvider = withInitialState<AppStateProviderProps>(({
-  children,
-  initialState,
-}: AppStateProviderProps) => {
-  const pageStateHandlers = usePageState(initialState);
+export const AppStateProvider = withInitialState<AppStateProviderProps>(
+  ({ children, initialState }: AppStateProviderProps) => {
+    const pageStateHandlers = usePageState(initialState);
 
-  return (
-    <AppStateContext.Provider value={pageStateHandlers}>
-      {children}
-    </AppStateContext.Provider>
-  );
-});
+    return (
+      <AppStateContext.Provider value={pageStateHandlers}>
+        {children}
+      </AppStateContext.Provider>
+    );
+  }
+);
 
 export const useAppState = () => useContext(AppStateContext);

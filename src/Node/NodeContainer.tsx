@@ -17,8 +17,6 @@ export const NodeContainer = ({
   isFocused,
   updateFocusedIndex,
 }: NodeContainerProps) => {
-  // console.log("Rendering NodeTypeSwitcher with node type:", node.type);
-  // console.log("Node data in NodeContainer:", node);
   const { attributes, listeners, setNodeRef, transform, transition } =
     useSortable({
       id: node.id,
@@ -28,6 +26,29 @@ export const NodeContainer = ({
     transform: CSS.Transform.toString(transform),
     transition,
   };
+
+  const containerStyle = {
+    ...(node.isPlaceholder
+      ? {
+          opacity: 0.6,
+          border: "2px dashed #3498db",
+          backgroundColor: "#edf7ff",
+          padding: "10px",
+          borderRadius: "4px",
+          marginBottom: "8px",
+        }
+      : {}),
+  };
+
+  if (node.isPlaceholder) {
+    return (
+      <div style={containerStyle} className="node-placeholder">
+        <div className="placeholder-content">
+          <span>Will add: {node.value}</span>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div

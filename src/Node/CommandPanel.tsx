@@ -18,10 +18,10 @@ const supportedNodeTypes: SupportedNodeType[] = [
   { value: "text", name: "Text" },
   { value: "list", name: "List" },
   { value: "page", name: "Page" },
-  { value: "image", name: "Image" },
-  // { value: "heading1", name: "Heading 1" },
-  // { value: "heading2", name: "Heading 2" },
-  // { value: "heading3", name: "Heading 3" },
+  // { value: "image", name: "Image" },
+  { value: "heading1", name: "Heading 1" },
+  { value: "heading2", name: "Heading 2" },
+  { value: "heading3", name: "Heading 3" },
   { value: "timer", name: "Timer" },
 ];
 
@@ -37,7 +37,7 @@ export const CommandPanel = ({ selectItem, nodeText }: CommandPanelProps) => {
     };
 
     window.addEventListener("keydown", handleKeyDown);
-    
+
     return () => {
       window.removeEventListener("keydown", handleKeyDown);
     };

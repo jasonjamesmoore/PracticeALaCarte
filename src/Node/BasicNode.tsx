@@ -24,6 +24,7 @@ export const BasicNode = ({
   isFocused,
   index,
 }: BasicNodeProps) => {
+  const isPlaceholder = node.type === "placeholder";
   const nodeRef = useRef<HTMLDivElement>(null);
   const showCommandPanel = isFocused && node?.value?.match(/^\//);
 
@@ -31,15 +32,23 @@ export const BasicNode = ({
     useAppState();
 
   useEffect(() => {
-    if (nodeRef.current && document.activeElement !== nodeRef.current) {
-      nodeRef.current.textContent = node.value;
+    if (nodeRef.current) {
+      if (isPlaceholder) {
+        nodeRef.current.textContent = node.value || "Drop Here";
+        nodeRef.current.setAttribute("contenteditable", "false");
+      } else {
+        if (document.activeElement !== nodeRef.current) {
+          nodeRef.current.textContent = node.value;
+        }
+        nodeRef.current.setAttribute("contenteditable", "true");
+      }
     }
-    if (isFocused) {
+    if (isFocused && !isPlaceholder) {
       nodeRef.current?.focus();
     } else {
       nodeRef.current?.blur();
     }
-  }, [node, isFocused]);
+  }, [node, isFocused, isPlaceholder]);
 
   const parseCommand = (nodeType: NodeType) => {
     if (nodeRef.current) {
@@ -82,15 +91,15 @@ export const BasicNode = ({
 
   return (
     <>
-      {showCommandPanel && (
+      {showCommandPanel && !isPlaceholder && (
         <CommandPanel selectItem={parseCommand} nodeText={node.value} />
       )}
       <div
-        onInput={handleInput}
-        onClick={handleClick}
-        onKeyDown={onKeyDown}
+        onInput={isPlaceholder ? undefined : handleInput}
+        onClick={isPlaceholder ? undefined : handleClick}
+        onKeyDown={isPlaceholder ? undefined : onKeyDown}
         ref={nodeRef}
-        contentEditable
+        contentEditable={!isPlaceholder}
         suppressContentEditableWarning
         className={cx(styles.node, styles[node.type])}
       />

@@ -4,12 +4,41 @@ import { useAuthSession } from "../Auth/AuthSessionContext";
 import { Page, ParentChildRelation } from "../utils/types";
 import { PracticeSessionCard } from "./PracticeSessionCard";
 
+const buildPageTree = (pages: Page[], relations: ParentChildRelation[]) => {
+  const pageMap = new Map<string, { page: Page; children: Page[] }>();
+
+  pages.forEach((page) => {
+    pageMap.set(page.id, { page, children: [] });
+  });
+
+  relations.forEach((relation) => {
+    const parent = pageMap.get(relation.parent_page_id);
+    const child = pageMap.get(relation.child_page_id);
+
+    if (parent && child) {
+      parent.children.push(child.page);
+    }
+  });
+
+  const rootPages = pages.filter(
+    (page) => !relations.some((relation) => relation.child_page_id === page.id)
+  );
+
+  const buildNestedTree = (page: Page): Page & { children: Page[] } => ({
+    ...page,
+    children: (pageMap.get(page.id)?.children || []).map(buildNestedTree),
+  });
+
+  return rootPages.map(buildNestedTree);
+};
+
 const PageNav = () => {
   const [pages, setPages] = useState<Page[]>([]);
-  const [groupedParentPages, setGroupedParentPages] = useState<
-    Record<string, ParentChildRelation[]>
-  >({});
+
   const [loading, setLoading] = useState<boolean>(true);
+  const [rootLevelPages, setRootLevelPages] = useState<
+    (Page & { children: Page[] })[]
+  >([]);
 
   const { session } = useAuthSession();
 
@@ -44,48 +73,21 @@ const PageNav = () => {
     const { data: relations, error: relationsError } = await supabase
       .from("page_relations")
       .select(
-        "parent_page_id::text, child_page_id::text, child_page:pages!child_page_id(id::text, title, slug)"
+        "parent_page_id::text, child_page_id::text, is_root, child_page:pages!child_page_id(id::text, title, slug)"
       )
       .or(
         `parent_page_id.in.(${fetchedPagesIds}), child_page_id.in.(${fetchedPagesIds})`
       )
-      .returns<
-        {
-          parent_page_id: string;
-          child_page_id: string;
-          child_page: {
-            id: string;
-            title: string;
-            slug: string;
-          } | null;
-        }[]
-      >();
+      .returns<ParentChildRelation[]>();
 
     if (relationsError) {
       console.error("Error fetching relations:", relationsError);
     }
 
-    console.log("Raw relations Data:", JSON.stringify(relations, null, 2));
+    const safeRelations = relations ?? [];
+    const pageTree = buildPageTree(fetchedPages, safeRelations);
 
-    // Process relations data into groups
-    const groupedParents: Record<string, ParentChildRelation[]> = {};
-
-    relations?.forEach(({ parent_page_id, child_page_id, child_page }) => {
-      if (!groupedParents[parent_page_id]) {
-        groupedParents[parent_page_id] = [];
-      }
-
-      groupedParents[parent_page_id].push({
-        parentPageId: parent_page_id,
-        childPageId: child_page_id,
-        childPage: child_page ? child_page : { id: "", title: "", slug: "" },
-      });
-    });
-    console.log(
-      "Processed groupedParents:",
-      JSON.stringify(groupedParents, null, 2)
-    );
-    setGroupedParentPages(groupedParents);
+    setRootLevelPages(pageTree);
     setLoading(false);
   };
 
@@ -95,27 +97,17 @@ const PageNav = () => {
     }
   }, [session, loading]);
 
-  const practiceRoutines = Object.entries(groupedParentPages).map(
-    ([parentId, relatedChildren]) => {
-      const parentPageData = pages.find((page) => page.id === parentId) ?? {
-        id: "",
-        slug: "",
-        title: "",
-        nodes: [],
-        cover: "",
-      };
-
-      return (
-        <PracticeSessionCard
-          key={parentId}
-          parentPage={parentPageData}
-          childrenPages={relatedChildren}
-        />
-      );
-    }
+  const renderPageTree = (page: Page & { children: Page[] }) => (
+    <PracticeSessionCard
+      key={page.id}
+      parentPage={page}
+      childrenPages={page.children}
+    />
   );
 
-  return <>{pages.length === 0 ? <p>Loading...</p> : practiceRoutines}</>;
+  return (
+    <>{loading ? <p>Loading...</p> : rootLevelPages.map(renderPageTree)}</>
+  );
 };
 
 export default PageNav;

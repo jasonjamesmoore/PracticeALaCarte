@@ -1,17 +1,17 @@
-import { ReactElement } from "react"
-import { useAuthSession } from "./AuthSessionContext"
-import { Navigate } from "react-router-dom"
+import { ReactElement } from "react";
+import { useAuthSession } from "./AuthSessionContext";
+import { Navigate } from "react-router-dom";
 
 type PrivateProps = {
-	component: ReactElement;
-}
+  component: ReactElement;
+};
 
 export const Private = ({ component }: PrivateProps) => {
-	const { session, loading } = useAuthSession()
+  const { session, loading } = useAuthSession();
 
-	if (loading) {
-		return <> Authenticating...</>
-	}
+  if (loading) {
+    return <> Authenticating...</>;
+  }
 
-	return session ? component : <Navigate to="/auth" />
-}
+  return session ? component : <Navigate to="/auth" />;
+};

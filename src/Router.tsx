@@ -4,6 +4,7 @@ import { AppStateProvider } from "./State/AppStateContext";
 import { Auth } from "./Auth/Auth";
 import { Private } from "./Auth/Private";
 import { MainLayout } from "./Layout Components/MainLayout";
+import { PageContainer } from "./Page/PageContainer";
 
 const router = createBrowserRouter([
   {
@@ -12,13 +13,19 @@ const router = createBrowserRouter([
   },
   {
     path: "/",
-    element: <Private component={<MainLayout />} />,
+    element: (
+      <AppStateProvider>
+        <Private component={<MainLayout />} />
+      </AppStateProvider>
+    ),
     children: [
       {
         path: "/",
         element: (
           <AppStateProvider>
-            <Page />
+            <PageContainer>
+              <Page />
+            </PageContainer>
           </AppStateProvider>
         ),
       },

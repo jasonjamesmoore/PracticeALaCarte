@@ -61,13 +61,12 @@ export default function Countdown({
         }}
       >
         {isRunning
-          ? timeRemaining > 0 
+          ? timeRemaining > 0
             ? ""
             : "Done!"
           : newTimePicked
           ? "Start!"
-          : "Done!"
-          }
+          : "Done!"}
       </span>
     </div>
   );

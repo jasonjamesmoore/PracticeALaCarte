@@ -2,7 +2,7 @@ import { NodeData, NodeType } from "../utils/types";
 import { BasicNode } from "./BasicNode";
 import { ImageNode } from "./ImageNode";
 import { PageNode } from "./PageNode";
-import { TimerNode }  from "./TimerNode";
+import { TimerNode } from "./TimerNode";
 // import { useAppState } from "../State/AppStateContext";
 
 type NodeTypeSwitcherProps = {
@@ -18,6 +18,7 @@ const TEXT_NODE_TYPES: NodeType[] = [
   "heading1",
   "heading2",
   "heading3",
+  "placeholder",
 ];
 
 export const NodeTypeSwitcher = ({
@@ -26,12 +27,8 @@ export const NodeTypeSwitcher = ({
   isFocused,
   index,
 }: NodeTypeSwitcherProps) => {
-  // console.log("Node type:", node.type);
-  // console.log("Rendering NodeTypeSwitcher with node:", node);
   // const { nodes } = useAppState();
-  // console.log("Nodes state in NodeTypeSwitcher:", nodes);
   if (TEXT_NODE_TYPES.includes(node.type)) {
-    // console.log("Rendering BasicNode from NodeTypeSwitcher");
     return (
       <BasicNode
         node={node}

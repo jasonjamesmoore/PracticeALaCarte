@@ -2,13 +2,15 @@ import { useEffect, useState, Dispatch, SetStateAction } from "react";
 import { NodeData } from "../utils/types";
 
 type UseFocusedNodeIndexProps = {
-  nodes: NodeData[];
+  nodes: NodeData[] | undefined;
 };
 
 export const useFocusedNodeIndex = ({
-  nodes,
+  nodes = [],
 }: UseFocusedNodeIndexProps): [number, Dispatch<SetStateAction<number>>] => {
   const [focusedNodeIndex, setFocusedNodeIndex] = useState(0);
+
+  const safeNodes = nodes || [];
 
   useEffect(() => {
     const onKeyDown = (event: KeyboardEvent) => {
@@ -22,7 +24,7 @@ export const useFocusedNodeIndex = ({
     document.addEventListener("keydown", onKeyDown);
 
     return () => document.removeEventListener("keydown", onKeyDown);
-  }, [nodes]);
+  }, [safeNodes]);
 
   return [focusedNodeIndex, setFocusedNodeIndex];
 };

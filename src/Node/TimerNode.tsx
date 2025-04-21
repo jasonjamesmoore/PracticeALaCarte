@@ -80,43 +80,40 @@ export const TimerNode = ({ node, isFocused, index }: TimerNodeProps) => {
 
   return (
     <>
-    <Card shadow="xl" className={styles.timerNode}>
-    <div className={styles.timerNodeContainer}>
-      {/* <div className={styles.darkModeToggle}><DarkModeToggle /></div> */}
-      <div className={styles.countdownContainer}>
-        <Countdown
-          size={150}
-          timeRemaining={seconds}
-          totalTime={totalTime}
-          onClick={handleStart}
-          isRunning={isRunning}
-          newTimePicked={newTimePicked}
-        />
-      </div>
-      <Button.Group className={styles.timePickButtons}>
-        <TimePickButton
-          time={1800}
-          displayTime="30 min"
-          onPick={handleTimeChange}
-          isActive={totalTime === 1800}
-        />
-        <TimePickButton
-          time={900}
-          displayTime="15 min"
-          onPick={handleTimeChange}
-          isActive={totalTime === 900}
-        />
-        <TimePickButton
-          time={300}
-          displayTime="5 min"
-          onPick={handleTimeChange}
-          isActive={totalTime === 300}
-        />
-      </Button.Group>
-    </div>
-    </Card>
+      <Card shadow="xl" className={styles.timerNode}>
+        <div className={styles.timerNodeContainer}>
+          <div className={styles.countdownContainer}>
+            <Countdown
+              size={150}
+              timeRemaining={seconds}
+              totalTime={totalTime}
+              onClick={handleStart}
+              isRunning={isRunning}
+              newTimePicked={newTimePicked}
+            />
+          </div>
+          <Button.Group className={styles.timePickButtons}>
+            <TimePickButton
+              time={1800}
+              displayTime="30 min"
+              onPick={handleTimeChange}
+              isActive={totalTime === 1800}
+            />
+            <TimePickButton
+              time={900}
+              displayTime="15 min"
+              onPick={handleTimeChange}
+              isActive={totalTime === 900}
+            />
+            <TimePickButton
+              time={300}
+              displayTime="5 min"
+              onPick={handleTimeChange}
+              isActive={totalTime === 300}
+            />
+          </Button.Group>
+        </div>
+      </Card>
     </>
-    
-    
   );
 };

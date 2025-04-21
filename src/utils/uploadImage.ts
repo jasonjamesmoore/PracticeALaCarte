@@ -5,7 +5,7 @@ export const uploadImage = async (file?: File) => {
     if (!file) {
       throw new Error("No file provided");
     }
-    
+
     const fileExt = file.name.split(".").pop();
     const fileName = `${Math.random()}.${fileExt}`;
     const filePath = fileName;

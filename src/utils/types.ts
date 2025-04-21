@@ -6,12 +6,20 @@ export type NodeType =
   | "heading1"
   | "heading2"
   | "heading3"
-  | "timer";
+  | "timer"
+  | "placeholder";
 
 export type NodeData = {
   id: string;
   type: NodeType;
   value: string;
+  isPlaceholder?: boolean;
+};
+
+export type DragItem = {
+  type: NodeType;
+  content: string;
+  placeholderId?: string;
 };
 
 export type Page = {
@@ -44,11 +52,13 @@ export type ParentPage = {
 };
 
 export type ParentChildRelation = {
-  parentPageId: string;
-  childPageId: string;
+  parent_page_id: string;
+  child_page_id: string;
+  is_root: boolean;
   childPage: {
     id: string;
     title: string;
     slug: string;
+    children?: { id: string; title: string; slug: string };
   };
 };

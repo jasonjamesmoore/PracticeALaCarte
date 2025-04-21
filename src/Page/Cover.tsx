@@ -14,11 +14,13 @@ export const Cover = ({ filePath, changePageCover }: CoverProps) => {
     fileInputRef.current?.click();
   };
 
-  const onCoverImageUpload: ChangeEventHandler<HTMLInputElement> = async (event) => {
+  const onCoverImageUpload: ChangeEventHandler<HTMLInputElement> = async (
+    event
+  ) => {
     const target = event.target;
     const result = await uploadImage(target?.files?.[0]);
 
-    if(result?.filePath){
+    if (result?.filePath) {
       changePageCover(result.filePath);
     }
   };
