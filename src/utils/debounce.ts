@@ -1,14 +1,15 @@
-type ArgumentTypes<F extends Function> = F extends (...args: infer A) => any
-  ? A
-  : never;
+// type ArgumentTypes<F extends Function> = F extends (...args: infer A) => any
+// 	? A
+// 	: never;
 
-export function debounce<TCallback extends Function>(
-  callback: TCallback,
-  delay = 300
-) {
-  let timeoutId: ReturnType<typeof setTimeout>;
-  return function (...args: ArgumentTypes<TCallback>) {
-    clearTimeout(timeoutId);
-    timeoutId = setTimeout(() => callback(...args), delay);
-  };
+export function debounce<TArgs extends any[], TReturn>(
+	callback: (...args: TArgs) => TReturn,
+	delay = 300
+): (...args: TArgs) => void {
+	let timeoutId: ReturnType<typeof setTimeout>;
+
+	return function (...args: TArgs): void {
+		clearTimeout(timeoutId);
+		timeoutId = setTimeout(() => callback(...args), delay);
+	};
 }

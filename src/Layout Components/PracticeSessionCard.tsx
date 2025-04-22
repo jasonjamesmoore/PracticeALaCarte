@@ -1,8 +1,8 @@
 import { NavLink } from "@mantine/core";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { IconChevronRight } from "@tabler/icons-react";
-import { Page, ParentChildRelation } from "../utils/types";
+import { Page } from "../utils/types";
 
 type PracticeSessionCardProps = {
   parentPage: Page;
